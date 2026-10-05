@@ -22,7 +22,7 @@ export function ValueProps({ variant = 'mobile' }: { variant?: 'mobile' | 'deskt
         </svg>
       ),
       title: 'Private',
-      body: "We don't store or share any of your info.",
+      body: "We don't store or share your info.",
     },
     {
       icon: (
