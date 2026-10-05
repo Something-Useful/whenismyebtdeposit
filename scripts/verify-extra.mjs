@@ -112,6 +112,9 @@ const NJ_MAP = { 1:1,2:1,3:2,4:2,5:3,6:3,7:4,8:4,9:5,0:5 };
 expect('NJ 1', NJ_MAP[1], 1);
 expect('NJ 5', NJ_MAP[5], 3);
 expect('NJ 0', NJ_MAP[0], 5);
+const njDay = (caseNo, warren) => (warren ? 1 : NJ_MAP[parseInt(caseNo[6], 10)]);
+expect('NJ 1234569, not Warren (7th digit 9)', njDay('1234569', false), 5);
+expect('NJ 1234569, Warren County', njDay('1234569', true), 1);
 
 // NM — SSN last 2 → 1-20 (formula)
 function nmCompute(last2) {

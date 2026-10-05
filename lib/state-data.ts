@@ -551,8 +551,8 @@ export const STATE_DATA: Record<string, StateData> = {
     },
     explainer:
       `New Jersey loads SNAP over the first 5 days of every month, based on the
-      7th digit of your case number. Warren County residents always receive
-      benefits on the 1st.`,
+      7th digit of your case number. In Warren County, everyone gets SNAP on
+      the 1st.`,
     scheduleSource: USDA_SOURCE,
     verified: { date: '2026-01-31' },
     contact: { hotline: '1-800-687-9512' },

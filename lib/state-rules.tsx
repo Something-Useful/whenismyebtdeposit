@@ -1092,6 +1092,8 @@ const newHampshire: StateRule = {
 
 // ─────────────────────────────────────────────────────────────
 // NEW JERSEY — 7th digit of case number → days 1-5 (paired)
+// Warren County gets the 1st regardless (USDA). Asked with the repurposed
+// cash toggle, like NY's NYC/Upstate question.
 // ─────────────────────────────────────────────────────────────
 const NJ_MAP: Record<number, number> = {
   1: 1, 2: 1, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 5, 0: 5,
@@ -1102,10 +1104,17 @@ const newJersey: StateRule = {
   field: {
     ...digitsField('e.g. 1234567', 7),
   },
-  cash: null,
+  cash: {
+    promptLabel: 'Do you live in Warren County?',
+    snapOnlyLabel: 'No',
+    hasCashLabel: 'Yes',
+    cashLabel: '',
+    combinedLabel: '',
+  },
   normalize: digitsOnly,
   validate: vDigits('your case number', 7),
-  compute(input) {
+  compute(input, inWarrenCounty) {
+    if (inWarrenCounty) return { snapDay: 1, cashDay: null };
     const d = digitsOnly(input);
     if (d.length < 7) return { snapDay: null, cashDay: null };
     const seventh = parseInt(d[6], 10);
