@@ -3,9 +3,11 @@ import type { ReactNode } from 'react';
 export default function EmbedLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      {/* Transparent so the partner's page shows around the card. */}
+      {/* Transparent so the partner's page shows around the card; no
+          reserved scrollbar gutter, since the iframe never scrolls. */}
       <style>{`
         html, body { background: transparent !important; }
+        html { scrollbar-gutter: auto; }
       `}</style>
       {/* GoatCounter: count inside cross-origin iframes, record ?partner=<slug>
           as a /p/<slug> path segment (GoatCounter strips unknown query
@@ -41,7 +43,7 @@ export default function EmbedLayout({ children }: { children: ReactNode }) {
           display: 'flex',
           alignItems: 'flex-start',
           justifyContent: 'center',
-          padding: '16px',
+          padding: '16px 0',
           boxSizing: 'border-box',
         }}
       >

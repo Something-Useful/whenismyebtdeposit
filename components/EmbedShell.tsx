@@ -32,7 +32,8 @@ export function EmbedShell({ tint, children }: Props) {
           background: tint,
           border: `1px solid ${C.line}`,
           borderRadius: 20,
-          padding: 24,
+          // 16px on phone-width cards, growing to 24px from 400px wide.
+          padding: 'clamp(16px, 8vw - 8px, 24px)',
           boxSizing: 'border-box',
           width: '100%',
         }}
