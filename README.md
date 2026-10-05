@@ -30,6 +30,8 @@ State information lives in two files:
 - **Analytics** — none by default. Set `NEXT_PUBLIC_GOATCOUNTER_URL` at
   build time to enable GoatCounter;
   see `.env.example`.
+- **Partner contact form** posts to Formspree when `NEXT_PUBLIC_FORMSPREE_URL`
+  is set at build time; otherwise it opens a prefilled email to the operator.
 - **Canonical URL** is build-time configurable via `NEXT_PUBLIC_SITE_URL`
   (defaults to the production domain).
 
@@ -39,7 +41,7 @@ State information lives in two files:
 [MIT](LICENSE).
 
 The code is MIT-licensed (see [LICENSE](LICENSE)).
-Three things do **not** travel with the license:
+Four things do **not** travel with the license:
 
 - **Operator identity.** The Terms of Use and Privacy Policy describe the
   instance run by the operator named in [`lib/operator.ts`](lib/operator.ts).
@@ -50,6 +52,8 @@ Three things do **not** travel with the license:
   to your own domain. The name "whenismyebtdeposit.org" stays with this project.
 - **Analytics.** Off unless you set `NEXT_PUBLIC_GOATCOUNTER_URL` for your
   own account (see `.env.example`).
+- **Contact form.** Set `NEXT_PUBLIC_FORMSPREE_URL` to your own Formspree
+  form, or leave it unset to use the email fallback.
 
 ---
 

@@ -4,13 +4,13 @@ import { C, FONT, TRACK_EYEBROW } from '@/lib/tokens';
 import { OPERATOR } from '@/lib/operator';
 import { PillButton } from './PillButton';
 
-// Where form submissions go. Point this at a form-backend endpoint (e.g. a
-// Formspree form URL: https://formspree.io/f/XXXXXXXX) and submissions are
-// emailed to the operator with zero server code — this site is a static
-// export, so there is no API route to receive them. While unset, the form
-// falls back to opening a prefilled email in the visitor's mail client so
-// no inquiry is ever silently dropped.
-const FORM_ENDPOINT = 'https://formspree.io/f/meebvbrn';
+// Where form submissions go: a form-backend endpoint such as a Formspree
+// form URL (https://formspree.io/f/XXXXXXXX), set per deployment via
+// NEXT_PUBLIC_FORMSPREE_URL at build time (see .env.example). This site is
+// a static export, so there is no API route to receive them. While unset,
+// the form falls back to opening a prefilled email in the visitor's mail
+// client so no inquiry is ever silently dropped.
+const FORM_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_URL;
 
 const labelStyle: CSSProperties = {
   display: 'block',
