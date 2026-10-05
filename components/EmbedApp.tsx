@@ -29,16 +29,6 @@ export function EmbedApp({ initialAbbr, demoPrefill }: Props) {
   // NY uses it for "Are you in NYC?" and NYC is far more populous.
   const [hasCash, setHasCash] = useState(() => defaultHasCashFor(initialAbbr));
 
-  // `?credit=1` (set by /embed/create snippets): reserve a strip at the
-  // bottom of the initial welcome card for the host page's credit line,
-  // which the snippet layers over the iframe. Client-only — the static
-  // export can't see query params at build time.
-  const [creditSpace, setCreditSpace] = useState(false);
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).get('credit') === '1')
-      setCreditSpace(true);
-  }, []);
-
   // Record a completed calculation in GoatCounter as an event pageview.
   // Recorded shapes (localhost is auto-filtered, so dev never counts):
   //   /embed/fl/result                    — partner iframe, no partner param
@@ -110,7 +100,6 @@ export function EmbedApp({ initialAbbr, demoPrefill }: Props) {
         setHasCash={setHasCash}
         onSubmit={goToResult}
         ctaPulse={!!demoPrefill}
-        creditSpace={creditSpace}
       />
     );
   }

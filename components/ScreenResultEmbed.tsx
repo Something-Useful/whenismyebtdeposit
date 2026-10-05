@@ -167,6 +167,24 @@ export function ScreenResultEmbed({ stateAbbr, inputValue, hasCash, onBack }: Pr
       >
         ← Start over
       </button>
+
+      <a
+        href={`/${stateAbbr.toLowerCase()}`}
+        target="_blank"
+        rel="noopener"
+        style={{
+          display: 'block',
+          textAlign: 'right',
+          marginTop: 14,
+          fontSize: 11.5,
+          color: C.inkMute,
+          textDecoration: 'underline',
+          textDecorationColor: 'rgba(21,20,15,0.25)',
+          textUnderlineOffset: 2,
+        }}
+      >
+        When is my EBT deposit?
+      </a>
     </EmbedShell>
   );
 }
