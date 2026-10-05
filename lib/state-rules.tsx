@@ -56,6 +56,16 @@ export interface FieldSpec {
   /** A second input shown only when the cash toggle is "Yes" (e.g. TX's
    * TANF EDG number). Encoded as "primary|cash" via MULTI_DELIM. */
   cashInput?: CashInputSpec;
+  /** A yes/no question shown above the cash toggle (FL's SUNCAP). Encoded
+   * as "primary|y" (yes) or "primary|" (no) via MULTI_DELIM; read it back
+   * with splitExtraToggle(). Can't be combined with `cashInput`. */
+  extraToggle?: ExtraToggleSpec;
+}
+
+export interface ExtraToggleSpec {
+  promptLabel: string;
+  noLabel: string;
+  yesLabel: string;
 }
 
 export interface CashInputSpec {
@@ -70,6 +80,12 @@ export interface CashInputSpec {
 // string using `MULTI_DELIM` as a separator. Missouri uses "MM|L" — month +
 // first letter. This avoids changing the page-level state shape.
 export const MULTI_DELIM = '|';
+
+/** [primary input, extraToggle answer] for rules with an `extraToggle`. */
+export function splitExtraToggle(input: string): [string, boolean] {
+  const [primary = '', flag = ''] = input.split(MULTI_DELIM);
+  return [primary, flag === 'y'];
+}
 
 export interface CashSpec {
   promptLabel: string;
@@ -104,6 +120,10 @@ export interface ComputeResult {
    * instead of calling `rule.everyMonth(args)`. Useful for states (PA) that
    * need to embed user-input-derived data (county) into the explanation. */
   everyMonthOverride?: ReactNode;
+  /** Replaces the SNAP row's label (FL: "SNAP (SUNCAP)"). */
+  snapLabel?: string;
+  /** Replaces the cash spec's combinedLabel when SNAP and cash share a day. */
+  combinedLabel?: string;
 }
 
 export interface EveryMonthArgs {
@@ -292,7 +312,9 @@ function vMo(input: string): string | null {
 // ─────────────────────────────────────────────────────────────
 // FLORIDA
 // SNAP: 1st-28th, digits 9 then 8 (read backward), dropping the 10th.
-// Cash aid or SUNCAP (SNAP for SSI recipients): 1st-3rd, same digits 9 then 8.
+// SUNCAP is SNAP for SSI recipients, received instead of regular SNAP, on
+// the 1st-3rd. Cash aid is separate, also on the 1st-3rd. Both use the
+// same digits 9 then 8 (USDA labels them "9th and 8th digit"; see #6).
 // ─────────────────────────────────────────────────────────────
 const FL_SNAP_BANDS: Band[] = [
   [0, 3, 1], [4, 6, 2], [7, 10, 3], [11, 13, 4], [14, 17, 5], [18, 20, 6],
@@ -308,26 +330,47 @@ const florida: StateRule = {
   name: 'Florida',
   field: {
     ...digitsField('e.g. 1234567890', 9),
+    extraToggle: {
+      promptLabel: 'Do you get SUNCAP (SNAP for people on SSI)?',
+      noLabel: 'No',
+      yesLabel: 'Yes',
+    },
   },
   cash: {
-    promptLabel: 'Do you get cash aid or SUNCAP?',
-    snapOnlyLabel: 'No, SNAP only',
+    promptLabel: 'Do you get cash aid?',
+    snapOnlyLabel: 'No',
     hasCashLabel: 'Yes',
-    cashLabel: 'Cash aid or SUNCAP',
-    combinedLabel: 'SNAP + cash aid or SUNCAP, both on',
+    cashLabel: 'Cash aid',
+    combinedLabel: 'SNAP + cash aid, both on',
   },
-  normalize: digitsOnly,
-  validate: vDigits('your case number', 9),
+  normalize: (input) => {
+    const [primary, suncap] = splitExtraToggle(input);
+    return `${digitsOnly(primary)}${MULTI_DELIM}${suncap ? 'y' : ''}`;
+  },
+  validate: (input) => vDigits('your case number', 9)(splitExtraToggle(input)[0]),
   compute(input, hasCash) {
-    const d = digitsOnly(input);
+    const [primary, suncap] = splitExtraToggle(input);
+    const d = digitsOnly(primary);
     if (d.length < 9) return { snapDay: null, cashDay: null };
-    const t = d.slice(0, 9);
+    const key = parseInt(d[8] + d[7], 10);
+    const cashDay = hasCash ? bandLookup(FL_CASH_BANDS, key) : null;
+    if (!suncap) return { snapDay: bandLookup(FL_SNAP_BANDS, key), cashDay };
+    const snapDay = bandLookup(FL_CASH_BANDS, key);
     return {
-      snapDay: bandLookup(FL_SNAP_BANDS, parseInt(t[8] + t[7], 10)),
-      cashDay: hasCash ? bandLookup(FL_CASH_BANDS, parseInt(t[8] + t[7], 10)) : null,
+      snapDay,
+      cashDay,
+      snapLabel: 'SNAP (SUNCAP)',
+      combinedLabel: 'SNAP (SUNCAP) + cash aid, both on',
+      everyMonthOverride: hasCash ? (
+        <>
+          Your SUNCAP and cash aid both load on the {bold(ordinal(snapDay))} of every month.
+        </>
+      ) : (
+        <>Your SUNCAP loads on the {bold(ordinal(snapDay))} of every month.</>
+      ),
     };
   },
-  everyMonth: (args) => snapAndCashEveryMonth(args, 'cash aid or SUNCAP'),
+  everyMonth: (args) => snapAndCashEveryMonth(args, 'cash aid'),
 };
 
 // ─────────────────────────────────────────────────────────────

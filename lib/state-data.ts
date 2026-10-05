@@ -102,15 +102,17 @@ export const STATE_DATA: Record<string, StateData> = {
           "It's a 9- or 10-digit number assigned by the Florida Department of Children and Families (DCF). You'll find it on any letter from DCF, or by signing in to your ACCESS Florida account at myaccessflorida.com.",
       },
     },
-    cashProgram: { name: 'SUNCAP' },
+    cashProgram: { name: null },
     explainer: {
       yes: `Florida loads SNAP between the 1st and 28th, using the 9th and 8th digits
       of your case number read backward (and dropping the 10th if your case
-      number has one). Cash aid and SUNCAP (food assistance for people who get
-      SSI) load on the 1st–3rd, based on the same two digits read backward.`,
+      number has one). SUNCAP, the SNAP program for people who get SSI, loads on
+      the 1st–3rd instead. Cash aid also loads on the 1st–3rd. Both use the
+      same two digits.`,
       no: `Florida loads SNAP between the 1st and 28th, using the 9th and 8th digits
       of your case number read backward (and dropping the 10th if your case
-      number has one).`,
+      number has one). SUNCAP, the SNAP program for people who get SSI, loads on
+      the 1st–3rd instead, based on the same two digits.`,
     },
     scheduleSource: USDA_SOURCE,
     verified: { date: '2024-06-18' },
