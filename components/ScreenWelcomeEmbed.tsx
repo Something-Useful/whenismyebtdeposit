@@ -1,10 +1,10 @@
 'use client';
-import { useCallback, useState } from 'react';
-import { C, TRACK_EYEBROW } from '@/lib/tokens';
+import { C, EYEBROW } from '@/lib/tokens';
 import { STATE_RULES } from '@/lib/state-rules';
 import { EmbedShell } from './EmbedShell';
 import { StatePicker } from './StatePicker';
 import { StateFields } from './StateFields';
+import { useStateForm } from './useStateForm';
 import { PillButton } from './PillButton';
 
 interface Props {
@@ -19,25 +19,9 @@ interface Props {
   ctaPulse?: boolean;
 }
 
-const EYEBROW_STYLE = {
-  fontSize: 13,
-  fontWeight: 700 as const,
-  letterSpacing: TRACK_EYEBROW,
-  color: C.inkSoft,
-  textTransform: 'uppercase' as const,
-  marginBottom: 14,
-};
-
-/**
- * Welcome screen for the embed. Same logic as ScreenWelcome but:
- *   - no app logo / no big serif H1 hero
- *   - no value-props block
- *   - no footer (host page owns chrome)
- *   - sage tinted card with a small "FIND YOUR NEXT EBT DEPOSIT" eyebrow
- *
- * Uses StatePicker + StateFields with `variant="desktop"`, which is the
- * cream-paper-on-tinted-card look the design specifies.
- */
+/** The main site's welcome form inside the embed card: an eyebrow instead
+ * of the hero, no value props or footer, and the desktop field style, which
+ * is designed to sit on a card. */
 export function ScreenWelcomeEmbed({
   stateAbbr,
   setStateAbbr,
@@ -49,65 +33,44 @@ export function ScreenWelcomeEmbed({
   ctaPulse = false,
 }: Props) {
   const rule = stateAbbr ? STATE_RULES[stateAbbr] : null;
-  const [error, setError] = useState<string | null>(null);
-  const [cashError, setCashError] = useState<string | null>(null);
-
-  const setInputAndClearError = useCallback(
-    (v: string) => {
-      setInputValue(v);
-      setError((e) => (e ? null : e));
-      setCashError((e) => (e ? null : e));
-    },
-    [setInputValue],
-  );
-
-  const handleSubmit = useCallback(() => {
-    if (!rule) return;
-    // Run every validator so the user sees all problems at once.
-    const err = rule.validate(inputValue);
-    const cashErr = hasCash ? (rule.validateCash?.(inputValue) ?? null) : null;
-    setError(err);
-    setCashError(cashErr);
-    if (err || cashErr) return;
-    onSubmit();
-  }, [rule, inputValue, hasCash, onSubmit]);
+  const { error, cashError, setInput, submit, clearErrors } = useStateForm({
+    rule,
+    inputValue,
+    setInputValue,
+    hasCash,
+    onSubmit,
+  });
 
   return (
     <EmbedShell tint={C.sage}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleSubmit();
+          submit();
         }}
       >
-        <div style={EYEBROW_STYLE}>Find your next EBT deposit</div>
+        <div style={{ ...EYEBROW, marginBottom: 14 }}>Find your next EBT deposit</div>
 
         <StatePicker
           variant="desktop"
           selectedAbbr={stateAbbr}
           onSelect={(abbr) => {
             setStateAbbr(abbr);
-            setInputValue('');
-            setHasCash(false);
-            setError(null);
-            setCashError(null);
+            clearErrors();
           }}
           onClear={() => {
             setStateAbbr(null);
-            setInputValue('');
-            setHasCash(false);
-            setError(null);
-            setCashError(null);
+            clearErrors();
           }}
         />
 
         {rule && (
-          <div style={{ marginTop: 22 }}>
+          <div className="fade-up" style={{ marginTop: 28 }}>
             <StateFields
               variant="desktop"
               rule={rule}
               inputValue={inputValue}
-              setInputValue={setInputAndClearError}
+              setInputValue={setInput}
               hasCash={hasCash}
               setHasCash={setHasCash}
               onSubmit={onSubmit}
@@ -139,7 +102,7 @@ export function ScreenWelcomeEmbed({
             )}
             <PillButton
               type="submit"
-              style={{ width: '100%', boxSizing: 'border-box', marginTop: 18 }}
+              style={{ width: '100%', boxSizing: 'border-box', marginTop: 28 }}
             >
               Show my deposit day
             </PillButton>
