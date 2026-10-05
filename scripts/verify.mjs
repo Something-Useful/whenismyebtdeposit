@@ -23,7 +23,7 @@ function flCompute(caseNo, hasCash) {
   const d8 = trimmed[7], d9 = trimmed[8];
   return {
     snapDay: bandLookup(FL_SNAP_BANDS, parseInt(d9 + d8, 10)),
-    cashDay: hasCash ? bandLookup(FL_CASH_BANDS, parseInt(d8 + d9, 10)) : null,
+    cashDay: hasCash ? bandLookup(FL_CASH_BANDS, parseInt(d9 + d8, 10)) : null,
   };
 }
 
@@ -51,8 +51,10 @@ function coCompute(s, hasCash) {
 }
 
 const tests = [
-  ['FL 123456735 + cash', flCompute('123456735', true), { snapDay: 15, cashDay: 2 }],
+  ['FL 123456735 + cash aid or SUNCAP (9th,8th = 53)', flCompute('123456735', true), { snapDay: 15, cashDay: 2 }],
   ['FL 123456735 SNAP only', flCompute('123456735', false), { snapDay: 15, cashDay: null }],
+  ['FL 123456719 (9th then 8th = 91 -> 3rd)', flCompute('123456719', true), { snapDay: 26, cashDay: 3 }],
+  ['FL 123456725 (9th then 8th = 52 -> 2nd)', flCompute('123456725', true), { snapDay: 15, cashDay: 2 }],
   ['FL 111111100 (digits 8,9 = 0,0)', flCompute('111111100', true), { snapDay: 1, cashDay: 1 }],
   ['FL 999999999 (digits 8,9 = 9,9)', flCompute('999999999', true), { snapDay: 28, cashDay: 3 }],
   ['FL too short', flCompute('12345', true), { snapDay: null, cashDay: null }],

@@ -292,7 +292,7 @@ function vMo(input: string): string | null {
 // ─────────────────────────────────────────────────────────────
 // FLORIDA
 // SNAP: 1st-28th, digits 9 then 8 (read backward), dropping the 10th.
-// SUNCAP / cash: 1st-3rd, digits 8 then 9 forward.
+// Cash aid or SUNCAP (SNAP for SSI recipients): 1st-3rd, same digits 9 then 8.
 // ─────────────────────────────────────────────────────────────
 const FL_SNAP_BANDS: Band[] = [
   [0, 3, 1], [4, 6, 2], [7, 10, 3], [11, 13, 4], [14, 17, 5], [18, 20, 6],
@@ -310,11 +310,11 @@ const florida: StateRule = {
     ...digitsField('e.g. 1234567890', 9),
   },
   cash: {
-    promptLabel: 'Do you get EBT cash (SUNCAP)?',
+    promptLabel: 'Do you get cash aid or SUNCAP?',
     snapOnlyLabel: 'No, SNAP only',
     hasCashLabel: 'Yes',
-    cashLabel: 'EBT cash (SUNCAP)',
-    combinedLabel: 'SNAP + EBT cash, both on',
+    cashLabel: 'Cash aid or SUNCAP',
+    combinedLabel: 'SNAP + cash aid or SUNCAP, both on',
   },
   normalize: digitsOnly,
   validate: vDigits('your case number', 9),
@@ -322,11 +322,12 @@ const florida: StateRule = {
     const d = digitsOnly(input);
     if (d.length < 9) return { snapDay: null, cashDay: null };
     const t = d.slice(0, 9);
-    const snapDay = bandLookup(FL_SNAP_BANDS, parseInt(t[8] + t[7], 10));
-    const cashDay = hasCash ? bandLookup(FL_CASH_BANDS, parseInt(t[7] + t[8], 10)) : null;
-    return { snapDay, cashDay };
+    return {
+      snapDay: bandLookup(FL_SNAP_BANDS, parseInt(t[8] + t[7], 10)),
+      cashDay: hasCash ? bandLookup(FL_CASH_BANDS, parseInt(t[8] + t[7], 10)) : null,
+    };
   },
-  everyMonth: (args) => snapAndCashEveryMonth(args, 'EBT cash (SUNCAP)'),
+  everyMonth: (args) => snapAndCashEveryMonth(args, 'cash aid or SUNCAP'),
 };
 
 // ─────────────────────────────────────────────────────────────

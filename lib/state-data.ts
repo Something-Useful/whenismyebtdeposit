@@ -53,7 +53,7 @@ export interface StateData {
   /** What the state calls SNAP ("CalFresh", "Basic Food"); omit → "SNAP". */
   snapProgramName?: string;
   /** Present when the state has an EBT cash benefit we cover. `name` is
-   * the program's proper name (SUNCAP, CalWORKs, TANF); null when the
+   * the program's proper name (CalWORKs, SUNCAP, TANF); null when the
    * state offers cash on EBT without a distinct program name in our copy. */
   cashProgram?: { name: string | null };
   /** The "How {state} calculates this" body — a plain string, rendered
@@ -103,11 +103,15 @@ export const STATE_DATA: Record<string, StateData> = {
       },
     },
     cashProgram: { name: 'SUNCAP' },
-    explainer:
-      `Florida loads SNAP between the 1st and 28th, using the 9th and 8th digits
+    explainer: {
+      yes: `Florida loads SNAP between the 1st and 28th, using the 9th and 8th digits
       of your case number read backward (and dropping the 10th if your case
-      number has one). EBT cash (SUNCAP) loads on the 1st–3rd, based on the same
-      two digits read forward.`,
+      number has one). Cash aid and SUNCAP (food assistance for people who get
+      SSI) load on the 1st–3rd, based on the same two digits read backward.`,
+      no: `Florida loads SNAP between the 1st and 28th, using the 9th and 8th digits
+      of your case number read backward (and dropping the 10th if your case
+      number has one).`,
+    },
     scheduleSource: USDA_SOURCE,
     verified: { date: '2024-06-18' },
     contact: { hotline: '1-866-762-2237', portal: { name: 'ACCESS Florida', url: 'https://www.myaccessflorida.com' } },
