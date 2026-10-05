@@ -1,5 +1,4 @@
 'use client';
-import { useCallback, useState } from 'react';
 import { SERIF } from '@/lib/tokens';
 import { STATE_RULES } from '@/lib/state-rules';
 import { ScreenChrome } from './ScreenChrome';
@@ -7,6 +6,7 @@ import { HeaderArea } from './HeaderArea';
 import { AppLogo } from './AppLogo';
 import { StatePicker } from './StatePicker';
 import { StateFields } from './StateFields';
+import { useStateForm } from './useStateForm';
 import { ValueProps } from './ValueProps';
 import { PillButton } from './PillButton';
 import { AppFooter } from './AppFooter';
@@ -31,28 +31,13 @@ export function ScreenWelcome({
   onSubmit,
 }: Props) {
   const rule = stateAbbr ? STATE_RULES[stateAbbr] : null;
-  const [error, setError] = useState<string | null>(null);
-  const [cashError, setCashError] = useState<string | null>(null);
-
-  const setInputAndClearError = useCallback(
-    (v: string) => {
-      setInputValue(v);
-      setError((e) => (e ? null : e));
-      setCashError((e) => (e ? null : e));
-    },
-    [setInputValue],
-  );
-
-  const handleSubmit = useCallback(() => {
-    if (!rule) return;
-    // Run every validator so the user sees all problems at once.
-    const err = rule.validate(inputValue);
-    const cashErr = hasCash ? (rule.validateCash?.(inputValue) ?? null) : null;
-    setError(err);
-    setCashError(cashErr);
-    if (err || cashErr) return;
-    onSubmit();
-  }, [rule, inputValue, hasCash, onSubmit]);
+  const { error, cashError, setInput, submit, clearErrors } = useStateForm({
+    rule,
+    inputValue,
+    setInputValue,
+    hasCash,
+    onSubmit,
+  });
 
   return (
     <ScreenChrome>
@@ -77,7 +62,7 @@ export function ScreenWelcome({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleSubmit();
+          submit();
         }}
         style={{ padding: '24px 24px 0', flex: 1, display: 'flex', flexDirection: 'column' }}
       >
@@ -85,17 +70,11 @@ export function ScreenWelcome({
           selectedAbbr={stateAbbr}
           onSelect={(abbr) => {
             setStateAbbr(abbr);
-            setInputValue('');
-            setHasCash(false);
-            setError(null);
-            setCashError(null);
+            clearErrors();
           }}
           onClear={() => {
             setStateAbbr(null);
-            setInputValue('');
-            setHasCash(false);
-            setError(null);
-            setCashError(null);
+            clearErrors();
           }}
         />
 
@@ -106,7 +85,7 @@ export function ScreenWelcome({
             <StateFields
               rule={rule}
               inputValue={inputValue}
-              setInputValue={setInputAndClearError}
+              setInputValue={setInput}
               hasCash={hasCash}
               setHasCash={setHasCash}
               onSubmit={onSubmit}

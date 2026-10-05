@@ -851,6 +851,12 @@ export function scheduleSourceFor(abbr: string | null | undefined): StateSource 
   return (abbr && STATE_DATA[abbr]?.scheduleSource) || USDA_SOURCE;
 }
 
+/** "How {state} calculates this" copy for this household. */
+export function explainerFor(abbr: string, hasCash: boolean): string {
+  const e = STATE_DATA[abbr].explainer;
+  return typeof e === 'string' ? e : hasCash ? e.yes : e.no;
+}
+
 /** Result-card label for the SNAP row: "SNAP (CalFresh)" etc. */
 export function snapDisplayLabel(abbr: string): string {
   const program = STATE_DATA[abbr]?.snapProgramName;

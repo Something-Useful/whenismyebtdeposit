@@ -18,3 +18,12 @@ export const SERIF = `var(--font-source-serif), 'Source Serif 4', Georgia, serif
  * labels, card labels). Uppercase needs some tracking to breathe, but the
  * longer labels get hard to read when it's too loose. */
 export const TRACK_EYEBROW = '0.03em';
+
+/** Screen-level eyebrow ("YOUR NEXT EBT DEPOSIT IS"). */
+export const EYEBROW = {
+  fontSize: 13,
+  fontWeight: 600,
+  letterSpacing: TRACK_EYEBROW,
+  color: C.inkSoft,
+  textTransform: 'uppercase',
+} as const;

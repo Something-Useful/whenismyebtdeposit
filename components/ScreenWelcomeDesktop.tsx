@@ -1,11 +1,11 @@
 'use client';
-import { useCallback, useState } from 'react';
 import { C, SERIF, FONT, TRACK_EYEBROW } from '@/lib/tokens';
 import { STATE_RULES } from '@/lib/state-rules';
 import { DesktopShell, DESKTOP_COLUMN } from './DesktopShell';
 import { DesktopNav } from './DesktopNav';
 import { StatePicker } from './StatePicker';
 import { StateFields } from './StateFields';
+import { useStateForm } from './useStateForm';
 import { ValueProps } from './ValueProps';
 import { AppFooter } from './AppFooter';
 
@@ -29,28 +29,13 @@ export function ScreenWelcomeDesktop({
   onSubmit,
 }: Props) {
   const rule = stateAbbr ? STATE_RULES[stateAbbr] : null;
-  const [error, setError] = useState<string | null>(null);
-  const [cashError, setCashError] = useState<string | null>(null);
-
-  const setInputAndClearError = useCallback(
-    (v: string) => {
-      setInputValue(v);
-      setError((e) => (e ? null : e));
-      setCashError((e) => (e ? null : e));
-    },
-    [setInputValue],
-  );
-
-  const handleSubmit = useCallback(() => {
-    if (!rule) return;
-    // Run every validator so the user sees all problems at once.
-    const err = rule.validate(inputValue);
-    const cashErr = hasCash ? (rule.validateCash?.(inputValue) ?? null) : null;
-    setError(err);
-    setCashError(cashErr);
-    if (err || cashErr) return;
-    onSubmit();
-  }, [rule, inputValue, hasCash, onSubmit]);
+  const { error, cashError, setInput, submit, clearErrors } = useStateForm({
+    rule,
+    inputValue,
+    setInputValue,
+    hasCash,
+    onSubmit,
+  });
 
   return (
     <DesktopShell>
@@ -81,7 +66,7 @@ export function ScreenWelcomeDesktop({
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleSubmit();
+            submit();
           }}
           style={{
             width: '100%',
@@ -113,17 +98,11 @@ export function ScreenWelcomeDesktop({
             selectedAbbr={stateAbbr}
             onSelect={(abbr) => {
               setStateAbbr(abbr);
-              setInputValue('');
-              setHasCash(false);
-              setError(null);
-              setCashError(null);
+              clearErrors();
             }}
             onClear={() => {
               setStateAbbr(null);
-              setInputValue('');
-              setHasCash(false);
-              setError(null);
-              setCashError(null);
+              clearErrors();
             }}
             variant="desktop"
           />
@@ -133,7 +112,7 @@ export function ScreenWelcomeDesktop({
               <StateFields
                 rule={rule}
                 inputValue={inputValue}
-                setInputValue={setInputAndClearError}
+                setInputValue={setInput}
                 hasCash={hasCash}
                 setHasCash={setHasCash}
                 onSubmit={onSubmit}
