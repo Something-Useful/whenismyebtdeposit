@@ -372,10 +372,10 @@ export const STATE_DATA: Record<string, StateData> = {
     },
     explainer:
       `Louisiana loads SNAP on odd-numbered days from the 5th to the 23rd, based
-      on the last digit of your SSN. Elderly or disabled households receive
-      benefits between the 1st and 4th.`,
-    scheduleSource: { name: 'Louisiana DCFS schedule', url: 'https://dcfs.la.gov/page/snap-updates-issuance-schedule-changes' },
-    verified: { date: '2026-07-31' },
+      on the last digit of your SSN. If you're 60 or older, or anyone in your
+      household is disabled, SNAP loads between the 1st and the 4th instead.`,
+    scheduleSource: { name: 'Louisiana Department of Health SNAP schedule', url: 'https://www.ldh.la.gov/news/SNAPupdate-nov7' },
+    verified: { date: '2026-10-05' },
     contact: { hotline: '1-888-524-3578', portal: { name: 'CAFÉ', url: 'https://sspweb.dcfs.louisiana.gov/selfservice' } },
   },
   ME: {

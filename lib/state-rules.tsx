@@ -733,8 +733,9 @@ const kentucky: StateRule = {
 };
 
 // ─────────────────────────────────────────────────────────────
-// LOUISIANA — last digit of SSN → days 5-23 (odd)
-// Elderly/disabled households instead get benefits the 1st-4th (per DCFS);
+// LOUISIANA — last digit of the head of household's SSN → days 5-23 (odd)
+// Households whose head is elderly or with any disabled member instead get
+// benefits the 1st-4th (per LDH);
 // no public formula assigns the exact day within that window, so we reuse
 // the cash-toggle UI to ask and show a text range — same repurposing
 // pattern as NY's "Are you in NYC?" toggle.
@@ -745,7 +746,7 @@ const louisiana: StateRule = {
   name: 'Louisiana',
   field: singleDigitField(),
   cash: {
-    promptLabel: 'Are you 60+ or disabled?',
+    promptLabel: 'Are you 60+, or is anyone in your household disabled?',
     snapOnlyLabel: 'No',
     hasCashLabel: 'Yes',
     cashLabel: '',
@@ -753,8 +754,8 @@ const louisiana: StateRule = {
   },
   normalize: (input) => digitsOnly(input).slice(-1),
   validate: vSingleDigit('the last digit of your SSN'),
-  compute(input, isElderlyOrDisabled) {
-    if (isElderlyOrDisabled) {
+  compute(input, elderlyOrDisabledHousehold) {
+    if (elderlyOrDisabledHousehold) {
       return {
         snapDay: null,
         cashDay: null,
