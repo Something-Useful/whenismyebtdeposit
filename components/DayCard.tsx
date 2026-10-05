@@ -24,7 +24,6 @@ export function DayCard({ entries, variant = 'mobile', subtext }: Props) {
   const isDesktop = variant === 'desktop';
   // Text mode uses a slightly smaller font so longer copy ("Between the 1st
   // and 20th") fits without wrapping awkwardly.
-  const baseSize = isDesktop ? 52 : 40;
   const textModeSize = isDesktop ? 36 : 30;
 
   const eyebrowStyle = {
@@ -48,6 +47,8 @@ export function DayCard({ entries, variant = 'mobile', subtext }: Props) {
         padding: isDesktop ? '24px 28px 26px' : '20px 24px 22px',
         border: `1px solid ${C.line}`,
         boxShadow: isDesktop ? '0 1px 2px rgba(21,20,15,0.04)' : undefined,
+        // Lets the mobile date size itself to the card (.day-date-mobile).
+        containerType: 'inline-size',
       }}
     >
       {entries.map((entry, i) => {
@@ -68,10 +69,13 @@ export function DayCard({ entries, variant = 'mobile', subtext }: Props) {
           >
             <div style={eyebrowStyle}>{entry.label}</div>
             <div
+              className={!entry.text && !isDesktop ? 'day-date-mobile' : undefined}
               style={{
                 fontFamily: SERIF,
                 fontWeight: 600,
-                fontSize: entry.text ? textModeSize : baseSize,
+                fontSize: entry.text ? textModeSize : isDesktop ? 52 : undefined,
+                // A single date never breaks across lines; text mode can.
+                whiteSpace: entry.text ? undefined : 'nowrap',
                 lineHeight: entry.text ? 1.1 : isDesktop ? 1.02 : 1.05,
                 letterSpacing: '-0.025em',
                 color: C.ink,
@@ -84,7 +88,7 @@ export function DayCard({ entries, variant = 'mobile', subtext }: Props) {
                   {month}{' '}
                   <span style={{ fontVariantNumeric: 'tabular-nums' }}>{day}</span>
                   <span
-                    style={{ fontSize: isDesktop ? 26 : 22, marginLeft: isDesktop ? 3 : 2 }}
+                    style={{ fontSize: isDesktop ? 26 : '0.55em', marginLeft: isDesktop ? 3 : 2 }}
                   >
                     {ordinalSuffix(day)}
                   </span>

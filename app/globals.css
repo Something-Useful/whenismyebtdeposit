@@ -94,3 +94,11 @@ summary:focus-visible {
     opacity: 1;
   }
 }
+
+/* Mobile deposit date ("September 22nd"): 40px, shrinking just enough on
+   narrow cards that the longest month and day still fit on one line.
+   cqw is the DayCard's content width; older browsers keep 40px. */
+.day-date-mobile {
+  font-size: 40px;
+  font-size: min(40px, 14.5cqw);
+}
