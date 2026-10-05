@@ -43,7 +43,7 @@ export function UpdatedPill({ iso }: { iso: string }) {
 export function ScheduleVerifiedRow({
   iso,
   source,
-  fontSize = 13,
+  fontSize = 14,
 }: {
   iso: string;
   /** The schedule's canonical source, linked inline. */

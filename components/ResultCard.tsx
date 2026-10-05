@@ -100,7 +100,7 @@ export function ResultCard({ stateAbbr, inputValue, hasCash, variant = 'mobile' 
           anchorRef={supportRef}
           title={SUPPORT_HELP_TITLE}
         >
-          <p style={{ fontSize: 14, lineHeight: 1.55, color: C.inkSoft, margin: 0 }}>
+          <p style={{ fontSize: 15, lineHeight: 1.55, color: C.inkSoft, margin: 0 }}>
             {linkifyText(supportHelpBody(stateAbbr))}
           </p>
         </Popover>

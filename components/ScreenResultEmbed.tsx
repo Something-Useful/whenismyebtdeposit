@@ -40,8 +40,9 @@ export function ScreenResultEmbed({ stateAbbr, inputValue, hasCash, onBack }: Pr
           target="_blank"
           rel="noopener"
           style={{
-            fontSize: 11.5,
-            color: C.inkMute,
+            fontSize: 13,
+            textAlign: 'right',
+            color: C.inkSoft,
             textDecoration: 'underline',
             textDecorationColor: 'rgba(21,20,15,0.25)',
             textUnderlineOffset: 2,

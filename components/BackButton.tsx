@@ -12,11 +12,13 @@ export function BackButton({ onClick }: { onClick: () => void }) {
         padding: '12px 22px',
         borderRadius: 999,
         border: `1.5px solid ${C.line}`,
-        fontSize: 14,
+        fontSize: 15,
         fontWeight: 500,
         fontFamily: FONT,
         color: C.ink,
         background: C.card,
+        whiteSpace: 'nowrap',
+        flexShrink: 0,
       }}
     >
       ← Back

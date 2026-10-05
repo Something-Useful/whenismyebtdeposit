@@ -390,7 +390,7 @@ export function StateFields({
                 style={{
                   all: 'unset',
                   cursor: 'pointer',
-                  fontSize: 13,
+                  fontSize: 15,
                   color: C.inkSoft,
                   textDecoration: 'underline',
                   textUnderlineOffset: 2,
@@ -401,7 +401,7 @@ export function StateFields({
             </div>
           )}
           {rule.field.helperText && (
-            <div style={{ fontSize: 12, color: C.inkMute, marginBottom: 22, lineHeight: 1.4 }}>
+            <div style={{ fontSize: 14, color: C.inkMute, marginBottom: 22, lineHeight: 1.45 }}>
               {rule.field.helperText}
             </div>
           )}
@@ -412,7 +412,7 @@ export function StateFields({
         <div
           role="alert"
           style={{
-            fontSize: 13,
+            fontSize: 14,
             color: ERROR_COLOR,
             marginTop: -10,
             marginBottom: 22,
@@ -430,7 +430,7 @@ export function StateFields({
           anchorRef={infoBtnRef}
           title={rule.field.infoModal.title}
         >
-          <p style={{ fontSize: 14, lineHeight: 1.55, color: C.inkSoft, margin: 0 }}>
+          <p style={{ fontSize: 15, lineHeight: 1.55, color: C.inkSoft, margin: 0 }}>
             {linkifyText(rule.field.infoModal.body)}
           </p>
         </Popover>
@@ -443,7 +443,7 @@ export function StateFields({
           anchorRef={secondInfoBtnRef}
           title={secondInfo.title}
         >
-          <p style={{ fontSize: 14, lineHeight: 1.55, color: C.inkSoft, margin: 0 }}>
+          <p style={{ fontSize: 15, lineHeight: 1.55, color: C.inkSoft, margin: 0 }}>
             {linkifyText(secondInfo.body)}
           </p>
         </Popover>
@@ -514,7 +514,7 @@ export function StateFields({
                 />
               </div>
               {cashError && (
-                <div role="alert" style={{ fontSize: 13, color: ERROR_COLOR, lineHeight: 1.4 }}>
+                <div role="alert" style={{ fontSize: 14, color: ERROR_COLOR, lineHeight: 1.4 }}>
                   {cashError}
                 </div>
               )}
