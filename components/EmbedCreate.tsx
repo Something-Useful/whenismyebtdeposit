@@ -179,8 +179,10 @@ export function EmbedCreate() {
 
       <div>
         <div style={labelStyle}>Preview</div>
+        <style dangerouslySetInnerHTML={{ __html: '.embed-preview > div { margin: 0 auto; }' }} />
         <div
           ref={previewRef}
+          className="embed-preview"
           style={{
             border: '1px dashed rgba(21,20,15,0.18)',
             borderRadius: 16,
