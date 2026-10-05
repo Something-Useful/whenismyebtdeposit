@@ -27,13 +27,13 @@ const paraStyle = { margin: '0 0 12px', lineHeight: 1.6 };
 const lastParaStyle = { margin: 0, lineHeight: 1.6 };
 const linkStyle = { color: '#5a574c', textDecoration: 'underline' };
 const lastUpdatedStyle = {
-  fontSize: 13,
-  color: '#8a8676',
+  fontSize: 14,
+  color: '#6f6b5d',
   margin: '0 0 24px',
 };
 const calloutStyle = {
   margin: '0 0 16px',
-  fontSize: 13,
+  fontSize: 14,
   fontWeight: 600 as const,
   color: '#15140f',
   background: 'rgba(228, 196, 105, 0.18)',

@@ -119,7 +119,7 @@ export default function PartnersPage() {
           Reach out and we'll set you up with a free, personalized calculator.
         </p>
         <PartnersContact />
-        <p style={{ fontSize: 13.5, color: '#8a8676', margin: '10px 0 0' }}>
+        <p style={{ fontSize: 14, color: C.inkMute, margin: '10px 0 0' }}>
           Or email us at{' '}
           <a
             href={`mailto:${OPERATOR.contactEmail}?subject=Partner%20inquiry`}
@@ -170,7 +170,7 @@ export default function PartnersPage() {
                 >
                   {vp.title}
                 </div>
-                <div style={{ fontSize: 13.5, color: C.inkSoft, lineHeight: 1.45, marginTop: 3 }}>
+                <div style={{ fontSize: 14, color: C.inkSoft, lineHeight: 1.45, marginTop: 3 }}>
                   {vp.body}
                 </div>
               </div>
