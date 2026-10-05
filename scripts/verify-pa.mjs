@@ -11,7 +11,15 @@
 //      counting lands on the right calendar date across tricky months.
 
 import { paHolidays, nthBusinessDay, isPaNonBusinessDay } from '../lib/business-days.ts';
-import { PA_COUNTIES, findPaCounty, paBusinessDay, paNeedsDigit } from '../lib/pa-rules.ts';
+import {
+  PA_COUNTIES,
+  PA_ISSUANCE_DAYS,
+  findPaCounty,
+  paBusinessDay,
+  paDepositDate,
+  paIssuanceDate,
+  paNeedsDigit,
+} from '../lib/pa-rules.ts';
 
 const iso = (d) =>
   d == null
@@ -117,6 +125,23 @@ for (const county of PA_COUNTIES) {
     }
   }
 }
+
+// ── Published calendar (PA FS 855) ──────────────────────────────────
+// The transcription agrees with business-day counting in every 2026 month
+// except November, which PA compresses (days 1-3 all on Nov 2).
+for (let m = 0; m < 12; m++) {
+  const published = PA_ISSUANCE_DAYS[`2026-${String(m + 1).padStart(2, '0')}`];
+  const counted = [...Array(10)].map((_, i) => nthBusinessDay(2026, m, i + 1).getDate());
+  eq(`2026-${m + 1} published ${m === 10 ? 'differs from' : 'matches'} counted`, JSON.stringify(published) === JSON.stringify(counted), m !== 10);
+}
+eq('Nov 2026 issuance day 10 (published)', iso(paIssuanceDate(2026, 10, 10)), '2026-11-12');
+eq('Nov 2026 issuance day 3 (published)', iso(paIssuanceDate(2026, 10, 3)), '2026-11-02');
+eq('Philadelphia digit 0, from Nov 1 2026', iso(paDepositDate(philly, 0, new Date(2026, 10, 1))), '2026-11-12');
+eq('Philadelphia digit 0, from Oct 20 2026 (Oct passed)', iso(paDepositDate(philly, 0, new Date(2026, 9, 20))), '2026-11-12');
+eq('Philadelphia digit 2, from Nov 1 2026', iso(paDepositDate(philly, 2, new Date(2026, 10, 1))), '2026-11-02');
+// Months the calendar doesn't cover fall back to counting business days.
+eq('Jan 2027 issuance day 1 (counted)', iso(paIssuanceDate(2027, 0, 1)), '2027-01-04');
+eq('Philadelphia digit 0, from Dec 20 2026', iso(paDepositDate(philly, 0, new Date(2026, 11, 20))), iso(nthBusinessDay(2027, 0, 10)));
 
 // ── Report ──────────────────────────────────────────────────────────
 let failed = 0;

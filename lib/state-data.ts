@@ -684,7 +684,9 @@ export const STATE_DATA: Record<string, StateData> = {
       days, meaning it excludes weekends and holidays. Most counties pay
       everyone on the same business day each month; some split households
       across two business days based on case number; the largest counties
-      spread households across the first 10 business days.`,
+      spread households across the first 10 business days. Pennsylvania
+      publishes the exact dates each year, and in short months, like November
+      2026, it moves some of them earlier.`,
     scheduleSource: USDA_SOURCE,
     verified: { date: '2024-06-18' },
     contact: { hotline: '1-800-692-7462', portal: { name: 'COMPASS', url: 'https://www.compass.state.pa.us' } },

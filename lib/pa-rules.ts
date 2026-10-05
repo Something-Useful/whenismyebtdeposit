@@ -1,7 +1,8 @@
-// Pennsylvania SNAP issuance is county-specific and counted in business days
-// (excluding weekends and holidays). We resolve that to an actual calendar
-// date via lib/business-days.ts, which uses the Commonwealth's own holiday
-// calendar (Administrative Circular 25-13).
+// Pennsylvania SNAP issuance is county-specific and counted in issuance days
+// (business days, excluding weekends and holidays). Where PA DHS's published
+// calendar covers the month we use its dates verbatim (PA_ISSUANCE_DAYS
+// below); otherwise we count business days via lib/business-days.ts, which
+// uses the Commonwealth's own holiday calendar (Administrative Circular 25-13).
 //
 // Three rule shapes (sourced from the USDA all-states schedule PDF):
 //
@@ -16,7 +17,7 @@
 // The `lookup`-style names are kept stable so the URL fragment after
 // `/pa#?county=adams` (if we ever add deep links) stays predictable.
 
-import { nextNthBusinessDay } from './business-days.ts';
+import { nthBusinessDay } from './business-days.ts';
 
 export type PaRule =
   | { kind: 'single'; day: number }
@@ -129,6 +130,35 @@ export function paBusinessDay(county: PaCounty, digit: number | null): number | 
   }
 }
 
+// Calendar dates of issuance days 1-10 (the SNAP days), from PA DHS's
+// "Cash and SNAP Payment Issuance Schedule" (PA FS 855, rev. 11/25):
+// http://services.dpw.state.pa.us/oimpolicymanuals/snap/assets/docs/PA%20FS%200855.pdf
+// It matches business-day counting except in months too short for 20
+// issuance days, and PA doesn't compress those consistently: November 2026
+// puts days 1-3 all on Nov 2, while February 2026 doubles up its last day.
+export const PA_ISSUANCE_DAYS: Record<string, readonly number[]> = {
+  '2026-01': [2, 5, 6, 7, 8, 9, 12, 13, 14, 15],
+  '2026-02': [2, 3, 4, 5, 6, 9, 10, 11, 12, 13],
+  '2026-03': [2, 3, 4, 5, 6, 9, 10, 11, 12, 13],
+  '2026-04': [1, 2, 3, 6, 7, 8, 9, 10, 13, 14],
+  '2026-05': [1, 4, 5, 6, 7, 8, 11, 12, 13, 14],
+  '2026-06': [1, 2, 3, 4, 5, 8, 9, 10, 11, 12],
+  '2026-07': [1, 2, 6, 7, 8, 9, 10, 13, 14, 15],
+  '2026-08': [3, 4, 5, 6, 7, 10, 11, 12, 13, 14],
+  '2026-09': [1, 2, 3, 4, 8, 9, 10, 11, 14, 15],
+  '2026-10': [1, 2, 5, 6, 7, 8, 9, 13, 14, 15],
+  '2026-11': [2, 2, 2, 3, 4, 5, 6, 9, 10, 12],
+  '2026-12': [1, 2, 3, 4, 7, 8, 9, 10, 11, 14],
+};
+
+/** Calendar date of issuance day N (1-10) in a month: the published
+ * calendar when we have it, otherwise the Nth business day. */
+export function paIssuanceDate(year: number, month0: number, n: number): Date | null {
+  const published = PA_ISSUANCE_DAYS[`${year}-${String(month0 + 1).padStart(2, '0')}`];
+  if (published) return n >= 1 && n <= published.length ? new Date(year, month0, published[n - 1]) : null;
+  return nthBusinessDay(year, month0, n);
+}
+
 /** The next actual deposit date, or null when we can't resolve the rule. */
 export function paDepositDate(
   county: PaCounty,
@@ -136,7 +166,12 @@ export function paDepositDate(
   today: Date,
 ): Date | null {
   const n = paBusinessDay(county, digit);
-  return n == null ? null : nextNthBusinessDay(n, today);
+  if (n == null) return null;
+  const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const thisMonth = paIssuanceDate(today.getFullYear(), today.getMonth(), n);
+  if (thisMonth && thisMonth >= todayMidnight) return thisMonth;
+  const nextY = today.getMonth() === 11 ? today.getFullYear() + 1 : today.getFullYear();
+  return paIssuanceDate(nextY, (today.getMonth() + 1) % 12, n);
 }
 
 export function ordinal(n: number): string {

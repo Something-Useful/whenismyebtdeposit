@@ -32,8 +32,8 @@ export function paEveryMonthCopy(county: PaCounty, digit: number | null): ReactN
   }
   return (
     <>
-      Your SNAP loads on the <strong>{ordinal(day)} business day</strong> of
-      every month{skipNote}.
+      Your SNAP usually loads on the <strong>{ordinal(day)} business day</strong>{' '}
+      of the month{skipNote}.
     </>
   );
 }
