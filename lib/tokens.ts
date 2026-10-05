@@ -2,7 +2,9 @@ export const C = {
   paper: '#f8f5ee',
   ink: '#15140f',
   inkSoft: '#5a574c',
-  inkMute: '#8a8676',
+  // Darkest secondary gray that still reads as lighter than inkSoft; passes
+  // 4.5:1 on white (5.3:1) and paper (4.9:1).
+  inkMute: '#6f6b5d',
   sage: '#d6e8c9',
   sageDeep: '#b6cfa3',
   line: 'rgba(21,20,15,0.10)',
