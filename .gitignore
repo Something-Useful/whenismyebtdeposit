@@ -29,3 +29,6 @@ CLAUDE.local.md
 .ds-sync/
 ds-bundle/
 .design-sync/
+
+# Local screenshot dumps (Apple Photos imports etc.)
+/screenshots/

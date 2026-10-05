@@ -50,7 +50,7 @@ export function AppFooter({ variant = 'mobile' }: { variant?: 'mobile' | 'deskto
           Partner
         </a>
         <span style={{ opacity: 0.4 }}>·</span>
-        <a href="https://github.com/lippytak/whenismyebtdeposit" style={linkStyle}>
+        <a href="https://github.com/Something-Useful/whenismyebtdeposit" style={linkStyle}>
           GitHub
         </a>
       </div>
