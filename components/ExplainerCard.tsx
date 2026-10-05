@@ -19,7 +19,7 @@ export function ExplainerCard({ stateAbbr, hasCash, variant = 'mobile', collapsi
   const rule = STATE_RULES[stateAbbr];
   if (!rule) return null;
   const isDesktop = variant === 'desktop';
-  const fontSize = isDesktop ? 14 : 13;
+  const fontSize = isDesktop ? 16 : 15;
 
   const cardStyle = {
     background: C.card,
@@ -28,7 +28,7 @@ export function ExplainerCard({ stateAbbr, hasCash, variant = 'mobile', collapsi
     padding: isDesktop ? '22px 26px' : '14px 16px',
   };
   const titleStyle = {
-    fontSize: 11.5,
+    fontSize: 13,
     fontWeight: 600,
     letterSpacing: TRACK_EYEBROW,
     color: C.inkMute,
@@ -53,7 +53,7 @@ export function ExplainerCard({ stateAbbr, hasCash, variant = 'mobile', collapsi
       <ScheduleVerifiedRow
         iso={STATE_DATA[stateAbbr].verified.date}
         source={scheduleSourceFor(stateAbbr)}
-        fontSize={fontSize}
+        fontSize={fontSize - 1}
       />
     </>
   );

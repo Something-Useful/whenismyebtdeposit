@@ -93,7 +93,7 @@ export function ValueProps({ variant = 'mobile' }: { variant?: 'mobile' | 'deskt
             >
               {it.title}
             </div>
-            <div style={{ fontSize: isDesktop ? 13 : 13.5, color: C.inkSoft, lineHeight: isDesktop ? 1.35 : 1.4, marginTop: 2 }}>
+            <div style={{ fontSize: isDesktop ? 14 : 15, color: C.inkSoft, lineHeight: 1.4, marginTop: 2 }}>
               {it.body}
             </div>
           </div>

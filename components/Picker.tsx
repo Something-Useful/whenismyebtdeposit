@@ -239,8 +239,8 @@ export function Picker({
             style={{
               all: 'unset',
               cursor: 'pointer',
-              fontSize: 13,
-              color: C.inkMute,
+              fontSize: 14,
+              color: C.inkSoft,
             }}
           >
             Change
@@ -304,13 +304,13 @@ export function Picker({
                 <span style={{ fontSize: isDesktop ? 15 : 16 }}>
                   {name}
                   {!supported && (
-                    <span style={{ fontSize: 11, color: C.inkMute, marginLeft: 8 }}>
+                    <span style={{ fontSize: 13, color: C.inkMute, marginLeft: 8 }}>
                       coming soon
                     </span>
                   )}
                 </span>
                 {abbr !== name && (
-                  <span style={{ fontSize: 12, color: C.inkMute, letterSpacing: '0.06em' }}>
+                  <span style={{ fontSize: 13, color: C.inkMute, letterSpacing: '0.06em' }}>
                     {abbr}
                   </span>
                 )}
@@ -318,7 +318,7 @@ export function Picker({
             );
           })}
           {filtered.length === 0 && (
-            <div style={{ padding: 18, fontSize: 14, color: C.inkMute }}>
+            <div style={{ padding: 18, fontSize: 15, color: C.inkMute }}>
               No {noun} match &ldquo;{query}&rdquo;
             </div>
           )}

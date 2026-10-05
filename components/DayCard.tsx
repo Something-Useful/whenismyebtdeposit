@@ -28,7 +28,7 @@ export function DayCard({ entries, variant = 'mobile', subtext }: Props) {
   const textModeSize = isDesktop ? 36 : 30;
 
   const eyebrowStyle = {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: 600,
     letterSpacing: TRACK_EYEBROW,
     color: C.inkMute,
@@ -101,7 +101,7 @@ export function DayCard({ entries, variant = 'mobile', subtext }: Props) {
         <div style={{ marginTop: isDesktop ? 14 : 12 }}>
           <p
             style={{
-              fontSize: isDesktop ? 14 : 13,
+              fontSize: isDesktop ? 16 : 15,
               color: C.inkSoft,
               lineHeight: 1.55,
               margin: 0,
