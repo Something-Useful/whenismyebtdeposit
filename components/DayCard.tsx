@@ -98,7 +98,7 @@ export function DayCard({ entries, variant = 'mobile', subtext }: Props) {
       })}
 
       {subtext && (
-        <div style={blockSpacing}>
+        <div style={{ marginTop: isDesktop ? 14 : 12 }}>
           <p
             style={{
               fontSize: isDesktop ? 14 : 13,
