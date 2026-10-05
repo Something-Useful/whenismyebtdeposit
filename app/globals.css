@@ -1,0 +1,96 @@
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Responsive layout switching — CSS-only so the correct layout renders
+   on the first paint, before any JavaScript executes. Both the mobile
+   and desktop screen components are always mounted; only one is visible. */
+.mobile-layout { display: block; }
+.desktop-layout { display: none; }
+
+@media (min-width: 768px) {
+  .mobile-layout { display: none; }
+  .desktop-layout { display: block; }
+}
+
+/* Column width used by StaticPage (privacy / terms / partners). Mirrors the
+   homepage's responsive container so the logo + title stay in the same
+   horizontal slot as the user navigates between the app and these static
+   pages — 480px is ScreenChrome's mobile column, 640px is DESKTOP_COLUMN. */
+.static-page-column {
+  width: 100%;
+  max-width: 480px;
+  margin-inline: auto;
+}
+@media (min-width: 768px) {
+  .static-page-column {
+    max-width: 640px;
+  }
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #f8f5ee;
+  font-family: var(--font-dm-sans), -apple-system, system-ui, sans-serif;
+  color: #15140f;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+
+input::placeholder {
+  color: rgba(21, 20, 15, 0.32);
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details[open] .caret {
+  transform: rotate(180deg);
+}
+
+/* Suppress the default focus ring on <summary> when triggered by mouse —
+   the ring looks like text-selection on click. Keyboard users still see a
+   focus indicator via :focus-visible. */
+summary:focus {
+  outline: none;
+}
+summary:focus-visible {
+  outline: 2px solid rgba(21, 20, 15, 0.4);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.25s ease both;
+}
+
+/* Opacity-only fade for Popover. The popover uses `transform` for its
+   above-placement positioning, so its animation can't touch transform —
+   otherwise the keyframe would clobber the translate that pins it above
+   the trigger. */
+@keyframes popoverFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

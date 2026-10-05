@@ -1,0 +1,13 @@
+# Next.js emits the OG image as `/opengraph-image` with no file extension, so
+# the host can't infer the content type from the path. Force it. (Netlify
+# reads this _headers file natively; the format is theirs.)
+/opengraph-image
+  Content-Type: image/png
+
+# Keep every /embed URL out of search indexes at the HTTP layer too (the
+# pages also carry meta robots noindex via app/embed/layout.tsx). The
+# canonical pages (/, /xx, /partner) are the SEO surface.
+/embed
+  X-Robots-Tag: noindex, nofollow
+/embed/*
+  X-Robots-Tag: noindex, nofollow

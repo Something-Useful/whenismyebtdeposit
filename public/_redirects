@@ -1,0 +1,3 @@
+# Old route (was live briefly) → new singular route
+/partners /partner 301
+/partners/ /partner/ 301

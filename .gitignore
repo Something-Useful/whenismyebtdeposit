@@ -1,0 +1,31 @@
+node_modules/
+.next/
+.next-dev/
+.next-export/
+out/
+.netlify/
+.env*.local
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts.bak
+
+# Local-only working files, kept out of the open source repo
+design_handoff_ebt_deposit_schedule/
+design-sync/
+NOTES*.md
+notes/
+mocks.png
+Monthly-Issuance-Schedule-All-States.pdf
+TODO.md
+
+# Claude Code config / user preferences
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.mcp.json
+
+# design-sync tooling (local design-iteration workspace, not part of the
+# open source project)
+.ds-sync/
+ds-bundle/
+.design-sync/
