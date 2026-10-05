@@ -16,14 +16,13 @@ const FL_SNAP_BANDS = [
 ];
 const FL_CASH_BANDS = [[0, 33, 1], [34, 66, 2], [67, 99, 3]];
 
-function flCompute(caseNo, hasCash) {
+function flCompute(caseNo, cash, suncap = false) {
   const digits = String(caseNo).replace(/\D/g, '');
   if (digits.length < 9) return { snapDay: null, cashDay: null };
-  const trimmed = digits.slice(0, 9);
-  const d8 = trimmed[7], d9 = trimmed[8];
+  const key = parseInt(digits[8] + digits[7], 10);
   return {
-    snapDay: bandLookup(FL_SNAP_BANDS, parseInt(d9 + d8, 10)),
-    cashDay: hasCash ? bandLookup(FL_CASH_BANDS, parseInt(d9 + d8, 10)) : null,
+    snapDay: bandLookup(suncap ? FL_CASH_BANDS : FL_SNAP_BANDS, key),
+    cashDay: cash ? bandLookup(FL_CASH_BANDS, key) : null,
   };
 }
 
@@ -51,10 +50,12 @@ function coCompute(s, hasCash) {
 }
 
 const tests = [
-  ['FL 123456735 + cash aid or SUNCAP (9th,8th = 53)', flCompute('123456735', true), { snapDay: 15, cashDay: 2 }],
   ['FL 123456735 SNAP only', flCompute('123456735', false), { snapDay: 15, cashDay: null }],
-  ['FL 123456719 (9th then 8th = 91 -> 3rd)', flCompute('123456719', true), { snapDay: 26, cashDay: 3 }],
-  ['FL 123456725 (9th then 8th = 52 -> 2nd)', flCompute('123456725', true), { snapDay: 15, cashDay: 2 }],
+  ['FL 123456735 SNAP + cash aid', flCompute('123456735', true), { snapDay: 15, cashDay: 2 }],
+  ['FL 123456735 SUNCAP (replaces SNAP)', flCompute('123456735', false, true), { snapDay: 2, cashDay: null }],
+  ['FL 123456735 SUNCAP + cash aid', flCompute('123456735', true, true), { snapDay: 2, cashDay: 2 }],
+  ['FL 123456719 SUNCAP (9th,8th = 91)', flCompute('123456719', false, true), { snapDay: 3, cashDay: null }],
+  ['FL 123456725 SNAP + cash aid (52)', flCompute('123456725', true), { snapDay: 15, cashDay: 2 }],
   ['FL 111111100 (digits 8,9 = 0,0)', flCompute('111111100', true), { snapDay: 1, cashDay: 1 }],
   ['FL 999999999 (digits 8,9 = 9,9)', flCompute('999999999', true), { snapDay: 28, cashDay: 3 }],
   ['FL too short', flCompute('12345', true), { snapDay: null, cashDay: null }],

@@ -71,6 +71,82 @@ function InfoButton({
   );
 }
 
+/** Two-option question rendered as one radio group: a single Tab stop, with
+ * arrow keys moving selection and focus together, like a native radio. */
+function YesNoToggle({
+  id,
+  prompt,
+  noLabel,
+  yesLabel,
+  value,
+  onChange,
+  yesFirst = false,
+  labelStyle,
+  buttonStyle,
+  style,
+}: {
+  id: string;
+  prompt: string;
+  noLabel: string;
+  yesLabel: string;
+  value: boolean;
+  onChange: (v: boolean) => void;
+  /** Puts Yes on the left when it's the pre-selected default (NY's NYC). */
+  yesFirst?: boolean;
+  labelStyle: CSSProperties;
+  buttonStyle: (active: boolean) => CSSProperties;
+  style?: CSSProperties;
+}) {
+  const noRef = useRef<HTMLButtonElement>(null);
+  const yesRef = useRef<HTMLButtonElement>(null);
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) return;
+    e.preventDefault();
+    const next = e.key === 'Home' ? false : e.key === 'End' ? true : !value;
+    onChange(next);
+    // Wait for the tabIndex swap to commit before moving focus.
+    requestAnimationFrame(() => (next ? yesRef : noRef).current?.focus());
+  };
+
+  const options = [
+    ['no', noLabel, noRef],
+    ['yes', yesLabel, yesRef],
+  ] as const;
+
+  return (
+    <div style={style}>
+      <label id={id} style={labelStyle}>
+        {prompt}
+      </label>
+      <div
+        role="radiogroup"
+        aria-labelledby={id}
+        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}
+      >
+        {(yesFirst ? [options[1], options[0]] : options).map(([k, lbl, ref]) => {
+          const active = (k === 'yes') === value;
+          return (
+            <button
+              ref={ref}
+              key={k}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              tabIndex={active ? 0 : -1}
+              onClick={() => onChange(k === 'yes')}
+              onKeyDown={onKeyDown}
+              style={buttonStyle(active)}
+            >
+              {lbl}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function StateFields({
   rule,
   inputValue,
@@ -96,10 +172,12 @@ export function StateFields({
   // The rule decides whether the second input applies — keeps this component
   // from having to know anything about PA counties.
   const needsDigit = rule.field.secondInputApplies?.(countyPart) ?? false;
-  // Rules with a `cashInput` keep both values in `inputValue` as
-  // "primary|cash" — split here, join on every edit.
+  // Rules with a `cashInput` or `extraToggle` keep both values in
+  // `inputValue` as "primary|second" — split here, join on every edit.
   const cashInput = rule.field.cashInput;
-  const [primaryPart = '', cashPart = ''] = cashInput
+  const extraToggle = rule.field.extraToggle;
+  const splitsInput = !!(cashInput || extraToggle);
+  const [primaryPart = '', secondPart = ''] = splitsInput
     ? inputValue.split(MULTI_DELIM)
     : [inputValue, ''];
   // The (i) on either conditional second input — PA's county digit or a
@@ -112,35 +190,6 @@ export function StateFields({
   const infoBtnRef = useRef<HTMLButtonElement>(null);
   const [secondInfoOpen, setSecondInfoOpen] = useState(false);
   const secondInfoBtnRef = useRef<HTMLButtonElement>(null);
-
-  // Cash question's two buttons act as a single radio group: one Tab stop,
-  // arrow keys toggle the selection + focus. Refs let us move focus to the
-  // newly-selected button after a keyboard toggle.
-  const cashNoRef = useRef<HTMLButtonElement>(null);
-  const cashYesRef = useRef<HTMLButtonElement>(null);
-
-  const handleCashKey = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (
-      e.key === 'ArrowLeft' ||
-      e.key === 'ArrowRight' ||
-      e.key === 'ArrowUp' ||
-      e.key === 'ArrowDown' ||
-      e.key === 'Home' ||
-      e.key === 'End'
-    ) {
-      e.preventDefault();
-      const newValue =
-        e.key === 'Home' ? false : e.key === 'End' ? true : !hasCash;
-      setHasCash(newValue);
-      // Wait for the tabIndex swap to commit, then move focus to whatever
-      // is now the "active" button. Without this the focus ring stays on
-      // the now-`tabIndex=-1` button and the next Tab moves to submit
-      // instead of letting the user keep arrowing.
-      requestAnimationFrame(() => {
-        (newValue ? cashYesRef : cashNoRef).current?.focus();
-      });
-    }
-  };
 
   const fieldBg = isDesktop ? C.paper : '#fff';
   const fieldRadius = isDesktop ? 14 : 16;
@@ -165,6 +214,19 @@ export function StateFields({
     marginBottom: labelMb,
     display: 'block',
   };
+
+  const toggleButtonStyle = (active: boolean): CSSProperties => ({
+    all: 'unset',
+    cursor: 'pointer',
+    textAlign: 'center',
+    padding: btnPadding,
+    borderRadius: btnRadius,
+    fontSize: btnFontSize,
+    fontWeight: 500,
+    background: active ? C.ink : fieldBg,
+    color: active ? '#fff' : C.ink,
+    border: `1.5px solid ${active ? C.ink : C.line}`,
+  });
 
   const inputContainerStyle: CSSProperties = {
     background: fieldBg,
@@ -297,7 +359,7 @@ export function StateFields({
                 if (rule.field.kind === 'singleDigit') {
                   v = v.replace(/\D/g, '').slice(-1);
                 }
-                setInputValue(cashInput ? `${v}${MULTI_DELIM}${cashPart}` : v);
+                setInputValue(splitsInput ? `${v}${MULTI_DELIM}${secondPart}` : v);
               }}
               inputMode={rule.field.inputMode}
               autoCapitalize={rule.field.autoCapitalize}
@@ -387,63 +449,33 @@ export function StateFields({
         </Popover>
       )}
 
+      {extraToggle && (
+        <YesNoToggle
+          id="extra-prompt-label"
+          prompt={extraToggle.promptLabel}
+          noLabel={extraToggle.noLabel}
+          yesLabel={extraToggle.yesLabel}
+          value={secondPart === 'y'}
+          onChange={(yes) => setInputValue(`${primaryPart}${MULTI_DELIM}${yes ? 'y' : ''}`)}
+          labelStyle={questionLabelStyle}
+          buttonStyle={toggleButtonStyle}
+          style={{ marginBottom: rule.cash ? 22 : 0 }}
+        />
+      )}
+
       {rule.cash && (
         <>
-          <label id="cash-prompt-label" style={questionLabelStyle}>
-            {rule.cash.promptLabel}
-          </label>
-          <div
-            role="radiogroup"
-            aria-labelledby="cash-prompt-label"
-            style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}
-          >
-            {(
-              // States that default to "Yes" (NY's NYC/Upstate toggle) put
-              // the Yes option on the left — it reads as the primary
-              // choice and matches the resting pre-selected state.
-              rule.cash.defaultHasCash
-                ? ([
-                    ['yes', rule.cash.hasCashLabel, cashYesRef],
-                    ['no', rule.cash.snapOnlyLabel, cashNoRef],
-                  ] as const)
-                : ([
-                    ['no', rule.cash.snapOnlyLabel, cashNoRef],
-                    ['yes', rule.cash.hasCashLabel, cashYesRef],
-                  ] as const)
-            ).map(([k, lbl, ref]) => {
-              const active = (k === 'yes') === hasCash;
-              return (
-                <button
-                  ref={ref}
-                  key={k}
-                  type="button"
-                  role="radio"
-                  aria-checked={active}
-                  // Roving tabindex: only the currently-selected option is in
-                  // the Tab order, so the pair counts as one stop. Inside the
-                  // group, arrow keys (see handleCashKey) move focus +
-                  // selection in lockstep — same shape as a native radio.
-                  tabIndex={active ? 0 : -1}
-                  onClick={() => setHasCash(k === 'yes')}
-                  onKeyDown={handleCashKey}
-                  style={{
-                    all: 'unset',
-                    cursor: 'pointer',
-                    textAlign: 'center',
-                    padding: btnPadding,
-                    borderRadius: btnRadius,
-                    fontSize: btnFontSize,
-                    fontWeight: 500,
-                    background: active ? C.ink : fieldBg,
-                    color: active ? '#fff' : C.ink,
-                    border: `1.5px solid ${active ? C.ink : C.line}`,
-                  }}
-                >
-                  {lbl}
-                </button>
-              );
-            })}
-          </div>
+          <YesNoToggle
+            id="cash-prompt-label"
+            prompt={rule.cash.promptLabel}
+            noLabel={rule.cash.snapOnlyLabel}
+            yesLabel={rule.cash.hasCashLabel}
+            value={hasCash}
+            onChange={setHasCash}
+            yesFirst={rule.cash.defaultHasCash}
+            labelStyle={questionLabelStyle}
+            buttonStyle={toggleButtonStyle}
+          />
 
           {/* Second input that only applies to cash recipients (TX's TANF
               EDG number). Rendered under the toggle that reveals it. */}
@@ -462,7 +494,7 @@ export function StateFields({
               </div>
               <div style={{ ...inputContainerStyle, marginBottom: cashError ? 12 : 0 }}>
                 <input
-                  value={cashPart}
+                  value={secondPart}
                   onChange={(e) =>
                     setInputValue(`${primaryPart}${MULTI_DELIM}${e.target.value}`)
                   }

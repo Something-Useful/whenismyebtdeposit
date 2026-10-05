@@ -41,13 +41,15 @@ export function ResultCard({ stateAbbr, inputValue, hasCash, variant = 'mobile' 
 
   const entries: DayEntry[] = showTwoRows
     ? [
-        { label: snapDisplayLabel(stateAbbr), date: snapDate, text: snapText },
+        { label: result.snapLabel ?? snapDisplayLabel(stateAbbr), date: snapDate, text: snapText },
         { label: rule.cash?.cashLabel ?? 'EBT cash', date: cashDate, text: cashText },
       ]
     : [
         {
           label:
-            hasCash && sameDay && rule.cash ? rule.cash.combinedLabel : snapDisplayLabel(stateAbbr),
+            hasCash && sameDay && rule.cash
+              ? (result.combinedLabel ?? rule.cash.combinedLabel)
+              : (result.snapLabel ?? snapDisplayLabel(stateAbbr)),
           date: snapDate,
           text: snapText,
         },

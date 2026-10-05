@@ -88,10 +88,10 @@ for (const block of blocks) {
 // Named programs are where we expect them, and nowhere else.
 eq('named cash programs',
   Object.entries(STATE_DATA).filter(([, d]) => d.cashProgram?.name).map(([a, d]) => `${a}:${d.cashProgram.name}`).sort(),
-  ['CA:CalWORKs', 'FL:SUNCAP', 'IN:TANF', 'TX:TANF']);
+  ['CA:CalWORKs', 'IN:TANF', 'TX:TANF']);
 eq('unnamed EBT-cash states',
   Object.entries(STATE_DATA).filter(([, d]) => d.cashProgram && d.cashProgram.name === null).map(([a]) => a).sort(),
-  ['CO', 'CT', 'KS', 'MI', 'WV']);
+  ['CO', 'CT', 'FL', 'KS', 'MI', 'WV']);
 eq('SNAP program names',
   Object.entries(STATE_DATA).filter(([, d]) => d.snapProgramName).map(([a, d]) => `${a}:${d.snapProgramName}`).sort(),
   ['AZ:Nutrition Assistance', 'CA:CalFresh', 'VT:3SquaresVT', 'WA:Basic Food', 'WI:FoodShare']);
