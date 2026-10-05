@@ -10,7 +10,14 @@ export function AppFooter({ variant = 'mobile' }: { variant?: 'mobile' | 'deskto
     textDecoration: 'underline',
     textDecorationColor: 'rgba(21,20,15,0.25)',
     textUnderlineOffset: 3,
+    // Padding widens the tap target on mobile without moving the text.
+    padding: isDesktop ? undefined : '6px 8px',
+    display: isDesktop ? undefined : ('inline-block' as const),
   };
+  // On mobile the links wrap (balanced, so 320px gets 3 + 2 rather than a
+  // lone "GitHub"), and dot separators would dangle at line ends; padding
+  // alone separates them there.
+  const dot = isDesktop ? <span style={{ opacity: 0.4 }}>·</span> : null;
   return (
     <div
       style={{
@@ -18,38 +25,37 @@ export function AppFooter({ variant = 'mobile' }: { variant?: 'mobile' | 'deskto
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: 6,
-        padding: isDesktop ? '24px 32px 28px' : '20px 24px 24px',
-        fontSize: isDesktop ? 12.5 : 12,
+        gap: isDesktop ? 6 : 10,
+        padding: isDesktop ? '24px 32px 28px' : '24px 24px 32px',
+        fontSize: isDesktop ? 12.5 : 14,
+        lineHeight: 1.5,
         color: C.inkMute,
         borderTop: isDesktop ? `1px solid ${C.line}` : undefined,
       }}
     >
       <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: isDesktop ? 22 : 14,
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}
+        style={
+          isDesktop
+            ? { display: 'flex', alignItems: 'center', gap: 22, flexWrap: 'wrap', justifyContent: 'center' }
+            : { textAlign: 'center', textWrap: 'balance' }
+        }
       >
         <a href="/privacy" style={linkStyle}>
           Privacy
         </a>
-        <span style={{ opacity: 0.4 }}>·</span>
+        {dot}
         <a href="/terms" style={linkStyle}>
           Terms
         </a>
-        <span style={{ opacity: 0.4 }}>·</span>
+        {dot}
         <a href={`mailto:${OPERATOR.contactEmail}`} style={linkStyle}>
           Contact
         </a>
-        <span style={{ opacity: 0.4 }}>·</span>
+        {dot}
         <a href="/partner" style={linkStyle}>
           Partner
         </a>
-        <span style={{ opacity: 0.4 }}>·</span>
+        {dot}
         <a href="https://github.com/Something-Useful/whenismyebtdeposit" style={linkStyle}>
           GitHub
         </a>
