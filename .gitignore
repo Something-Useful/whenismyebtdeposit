@@ -32,3 +32,6 @@ ds-bundle/
 
 # Local screenshot dumps (Apple Photos imports etc.)
 /screenshots/
+
+# Local embed demo page, never committed
+/public/embed-examples.html
