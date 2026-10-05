@@ -1,14 +1,19 @@
 # whenismyebtdeposit.org
 
-This is an EBT deposit date calculator hosted on http://whenismyebtdeposit.org/. We're open sourcing this project so anyone can inspect the underlying data sources and implementation of the deposit schedule ([`lib/state-data.ts`](lib/state-data.ts) and [`lib/state-rules.tsx`](lib/state-rules.tsx)). You're welcome to host another instance yourself, though the repo is not primarily structured with that use-case in mind.
+This is an EBT deposit date calculator hosted on https://whenismyebtdeposit.org/. We're open sourcing this project so anyone can inspect the underlying data sources and implementation of the deposit schedule ([`lib/state-data.ts`](lib/state-data.ts) and [`lib/state-rules.tsx`](lib/state-rules.tsx)). You're welcome to host another instance yourself, though the repo is not primarily structured with that use-case in mind.
 
 ## Data sources
 
 Every state has a different EBT deposit schedule. Sometimes they differ for SNAP (food stamps) and EBT Cash benefits. Schedules are transcribed
-from official sources — USDA's [Monthly SNAP Issuance Schedule](https://www.fns.usda.gov/snap/monthly-issuance-schedule)
-and state agency publications (e.g. Florida DCF's issuance manual, NY OTDA's
-NYC pickup schedule). Each state's sources and last-verified date are
-recorded in [`lib/state-data.ts`](lib/state-data.ts).
+from official government sources: USDA's [Monthly SNAP Issuance Schedule](https://www.fns.usda.gov/snap/monthly-issuance-schedule)
+for most states, and the state agency's own publication where it's more
+current or more detailed, such as Michigan's
+[MI Bridges Issuance Schedules (RFS 305)](https://mdhhs-pres-prod.michigan.gov/olmweb/ex/RF/Public/RFS/305.pdf),
+the [Texas Works Handbook (B-251)](https://www.hhs.texas.gov/handbooks/texas-works-handbook/b-250-ebt-benefit-issuance),
+and New York City's [EBT pickup schedule](https://otda.ny.gov/workingfamilies/ebt/nyc-issuance-schedule.pdf).
+Each state's canonical source (`scheduleSource`) and the date we last
+verified its schedule (`verified`) are recorded in
+[`lib/state-data.ts`](lib/state-data.ts).
 
 ## Contributing
 
@@ -16,8 +21,10 @@ If anything here is incorrect, out-of-date, or confusing, please open an issue o
 
 State information lives in two files:
 
-- [`lib/state-data.ts`](lib/state-data.ts) contains state program names, the official sources, when we last verified
-  the schedule, agency contact info, and the plain-English explainer users see.
+- [`lib/state-data.ts`](lib/state-data.ts) contains each state's program names, form field labels and
+  help text, the plain-English explainer users see ("How {state} calculates this"), the canonical source,
+  when we last verified the schedule, and the agency hotline and portal used in the "Didn't get your
+  benefits?" message.
 - [`lib/state-rules.tsx`](lib/state-rules.tsx) contains the implementations of the state deposit schedules. Pennsylvania's county rules, NYC's published tables, and the
   holiday calendars have their own modules alongside.
 
@@ -39,8 +46,6 @@ State information lives in two files:
 
 
 ## License
-
-[MIT](LICENSE).
 
 The code is MIT-licensed (see [LICENSE](LICENSE)).
 Four things do **not** travel with the license:
