@@ -66,7 +66,7 @@ function ColumnHeader({
       >
         {label}
       </span>
-      <span style={{ fontSize: 12.5, color: C.inkMute }}>{detail}</span>
+      <span style={{ fontSize: 13, color: C.inkMute }}>{detail}</span>
     </div>
   );
 }
@@ -108,12 +108,12 @@ function BeforeCard() {
         month, based on the 9th and 8th digits of your Florida case number
         &mdash; <Mark>read backwards</Mark>, <Mark>dropping the 10th digit</Mark>.
       </p>
-      <p style={{ fontSize: 12.5, color: C.inkSoft, margin: '12px 0 12px' }}>If your:</p>
+      <p style={{ fontSize: 13, color: C.inkSoft, margin: '12px 0 12px' }}>If your:</p>
       <div
         style={{
           ...row,
           paddingBottom: 8,
-          fontSize: 11.5,
+          fontSize: 13,
           fontWeight: 600,
           color: C.inkSoft,
         }}
@@ -128,7 +128,7 @@ function BeforeCard() {
             ...row,
             padding: '9px 0',
             borderTop: `1px solid ${C.line}`,
-            fontSize: 12,
+            fontSize: 13,
             color: C.ink,
           }}
         >
@@ -140,7 +140,7 @@ function BeforeCard() {
         style={{
           borderTop: `1px solid ${C.line}`,
           padding: '9px 0 2px',
-          fontSize: 12,
+          fontSize: 13,
           color: C.inkMute,
         }}
       >

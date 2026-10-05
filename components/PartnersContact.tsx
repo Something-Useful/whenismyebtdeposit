@@ -14,7 +14,7 @@ const FORM_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_URL;
 
 const labelStyle: CSSProperties = {
   display: 'block',
-  fontSize: 12,
+  fontSize: 13,
   fontWeight: 600,
   letterSpacing: TRACK_EYEBROW,
   color: C.inkMute,
@@ -171,7 +171,7 @@ export function PartnersContact() {
         />
       </Field>
       {error && (
-        <div style={{ color: '#b3261e', fontSize: 13.5, margin: '0 0 12px' }}>{error}</div>
+        <div style={{ color: '#b3261e', fontSize: 14, margin: '0 0 12px' }}>{error}</div>
       )}
       <PillButton type="submit" style={{ width: '100%', boxSizing: 'border-box' }}>
         Submit

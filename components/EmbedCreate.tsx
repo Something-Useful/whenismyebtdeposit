@@ -30,7 +30,7 @@ function buildSnippet(abbr: string | null, slug: string): string {
 
 const labelStyle: CSSProperties = {
   display: 'block',
-  fontSize: 12,
+  fontSize: 13,
   fontWeight: 600,
   letterSpacing: TRACK_EYEBROW,
   color: C.inkMute,
@@ -125,7 +125,7 @@ export function EmbedCreate() {
           autoComplete="organization"
           style={inputStyle}
         />
-        <div style={{ fontSize: 13, color: C.inkMute, marginTop: 8, lineHeight: 1.5 }}>
+        <div style={{ fontSize: 14, color: C.inkMute, marginTop: 8, lineHeight: 1.5 }}>
           Included in the embed code so your organization&rsquo;s usage shows
           up in analytics.
         </div>
@@ -169,7 +169,7 @@ export function EmbedCreate() {
         <div style={{ marginTop: 10 }}>
           <CopyButton text={snippet} />
         </div>
-        <div style={{ fontSize: 13, color: C.inkMute, marginTop: 12, lineHeight: 1.5 }}>
+        <div style={{ fontSize: 14, color: C.inkMute, marginTop: 12, lineHeight: 1.5 }}>
           Paste it where the calculator should appear. If your site moves
           scripts elsewhere (for example, Google Tag Manager), also add{' '}
           <code>&lt;div data-ebtcalc&gt;&lt;/div&gt;</code> where the calculator
