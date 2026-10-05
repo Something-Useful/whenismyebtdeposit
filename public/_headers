@@ -11,3 +11,7 @@
   X-Robots-Tag: noindex, nofollow
 /embed/*
   X-Robots-Tag: noindex, nofollow
+
+# Short cache so embed.js changes reach partner sites quickly.
+/embed.js
+  Cache-Control: public, max-age=300

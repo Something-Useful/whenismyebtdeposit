@@ -33,7 +33,7 @@ const VALUE_PROPS: Array<{ icon: ReactNode; title: string; body: string }> = [
       </svg>
     ),
     title: 'Embeddable EBT deposit calculator',
-    body: 'Place a deposit-date calculator for your state directly on your website as an iframe embeddable calculator.',
+    body: 'Place a deposit-date calculator for your state directly on your website with a script tag that creates an iframe.',
   },
   {
     icon: (

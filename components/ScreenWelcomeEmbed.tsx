@@ -17,10 +17,6 @@ interface Props {
   onSubmit: () => void;
   /** Demo mode (/embed?prefill=…): pulse + glow the CTA to invite the tap */
   ctaPulse?: boolean;
-  /** /embed?credit=1: reserve a strip below the combobox on the initial
-   * screen for the host page's credit line (layered over the iframe by the
-   * /embed/create snippet). */
-  creditSpace?: boolean;
 }
 
 const EYEBROW_STYLE = {
@@ -51,7 +47,6 @@ export function ScreenWelcomeEmbed({
   setHasCash,
   onSubmit,
   ctaPulse = false,
-  creditSpace = false,
 }: Props) {
   const rule = stateAbbr ? STATE_RULES[stateAbbr] : null;
   const [error, setError] = useState<string | null>(null);
@@ -106,11 +101,6 @@ export function ScreenWelcomeEmbed({
           }}
         />
 
-        {/* Breathing room for the host page's credit line, which sits over
-            this area of the card (initial screen only — once a state is
-            picked the fields take over and the host hides the line). */}
-        {!rule && creditSpace && <div aria-hidden style={{ height: 30 }} />}
-
         {rule && (
           <div style={{ marginTop: 22 }}>
             <StateFields
@@ -128,18 +118,18 @@ export function ScreenWelcomeEmbed({
         )}
 
         {rule && (
-          <div className={ctaPulse ? 'wimebt-cta-pulse' : undefined}>
+          <div className={ctaPulse ? 'ebtcalc-cta-pulse' : undefined}>
             {ctaPulse && (
               <style>{`
                 @media (prefers-reduced-motion: no-preference) {
                   /* !important: PillButton sets \`all: unset\` inline, which
                        resets animation at inline-style specificity. */
-                  .wimebt-cta-pulse button {
-                    animation: wimebt-cta-pulse 1.2s ease-out infinite !important;
+                  .ebtcalc-cta-pulse button {
+                    animation: ebtcalc-cta-pulse 1.2s ease-out infinite !important;
                   }
                   /* Saffron ring — deeper gold than the tint for contrast
                        against the sage card. */
-                  @keyframes wimebt-cta-pulse {
+                  @keyframes ebtcalc-cta-pulse {
                     0%   { transform: scale(1);    box-shadow: 0 0 0 0 rgba(219, 168, 58, 1); }
                     55%  { transform: scale(1.04); box-shadow: 0 0 0 16px rgba(219, 168, 58, 0); }
                     100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(219, 168, 58, 0); }

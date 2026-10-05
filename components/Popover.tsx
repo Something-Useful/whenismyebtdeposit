@@ -117,15 +117,19 @@ export function Popover({
       // the scrollIntoView below will pull the rest into view.
       const preferenceFits = preferredPlacement === 'below' ? fitsBelow : fitsAbove;
       const otherFits = preferredPlacement === 'below' ? fitsAbove : fitsBelow;
-      const placement: 'below' | 'above' = preferenceFits
-        ? preferredPlacement
-        : otherFits
-          ? preferredPlacement === 'below'
-            ? 'above'
-            : 'below'
-          : spaceBelow >= spaceAbove
-            ? 'below'
-            : 'above';
+      // An embed iframe can grow downward but not upward.
+      const framed = window.self !== window.top;
+      const placement: 'below' | 'above' = framed
+        ? 'below'
+        : preferenceFits
+          ? preferredPlacement
+          : otherFits
+            ? preferredPlacement === 'below'
+              ? 'above'
+              : 'below'
+            : spaceBelow >= spaceAbove
+              ? 'below'
+              : 'above';
 
       // For "above" placement we compute the real top (no transform) so the
       // layout box matches the visible position. That lets scrollIntoView

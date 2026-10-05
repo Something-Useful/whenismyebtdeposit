@@ -32,6 +32,8 @@ State information lives in two files:
   see `.env.example`.
 - **Partner contact form** posts to Formspree when `NEXT_PUBLIC_FORMSPREE_URL`
   is set at build time; otherwise it opens a prefilled email to the operator.
+- **Embedding** — partners paste a `<script>` tag generated at
+  `/embed/create`; see [`public/embed.js`](public/embed.js).
 - **Canonical URL** is build-time configurable via `NEXT_PUBLIC_SITE_URL`
   (defaults to the production domain).
 
