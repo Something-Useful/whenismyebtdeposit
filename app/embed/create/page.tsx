@@ -11,10 +11,6 @@ export const metadata: Metadata = {
 export default function EmbedCreatePage() {
   return (
     <StaticPage title="Create your embed">
-      <p style={{ margin: '0 0 28px', fontSize: 16.5, lineHeight: 1.55 }}>
-        Answer two questions, paste the snippet into your site, and
-        you&rsquo;re done.
-      </p>
       <EmbedCreate />
     </StaticPage>
   );
