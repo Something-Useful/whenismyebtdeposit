@@ -15,7 +15,7 @@
   if (!script) return;
   var origin = new URL(script.src).origin;
 
-  var MAX_WIDTH = 472; // 440px card + the widget page's 16px padding each side
+  var MAX_WIDTH = 440; // the widget card's own max width
   var INITIAL_HEIGHT = 400;
 
   // Must match the /embed/{state} pages that get built.
